@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TCPApp</string>
+    <string name="enter_port">Enter Port</string>
+    <string name="ip">Enter IP Here </string>
+</resources>

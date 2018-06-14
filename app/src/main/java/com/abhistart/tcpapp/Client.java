@@ -1,5 +1,9 @@
 package com.abhistart.tcpapp;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +25,14 @@ import java.util.ArrayList;
 
 public class Client extends AppCompatActivity {
 
+   static ArrayList<String>  clientArrayList;
+   static   ArrayAdapter<String> clientArrayAdapter;
 
+    private String ipAddress;
+    private String port;
+    EditText clientmessege;
 
+    private DataInputStream in;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,24 +40,27 @@ public class Client extends AppCompatActivity {
 
 
         ListView clientListView  =findViewById(R.id.clientListView);
-        EditText clientmessege  = findViewById(R.id.clientMessegeEditText);
+
+         clientmessege   = findViewById(R.id.clientMessegeEditText);
         Button clientSendButton = findViewById(R.id.clientSendButton);
-        ArrayList<String>  clientArrayList = new ArrayList<>();
-        ArrayAdapter<String> arrayAdapter  = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,clientArrayList);
-        clientListView.setAdapter(arrayAdapter);
+        clientArrayList = new ArrayList<>();
+        clientArrayAdapter  = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,clientArrayList);
+        clientListView.setAdapter(clientArrayAdapter);
+
+
 
         clientSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EditText ipEditText = findViewById(R.id.ipEditText);
                 EditText portEditText1 = findViewById(R.id.portEditText1);
-                String ipAddress  = ipEditText.getText().toString();
-                String port  = portEditText1.getText().toString();
+                 ipAddress  = ipEditText.getText().toString();
+                 port  = portEditText1.getText().toString();
+                String  message = clientmessege.getText().toString();
+                 MyParameters myParameters = new MyParameters(ipAddress,port,message,Client.this);
+                ClientBackgroundThread clientBackgroundThread = new ClientBackgroundThread();
+                clientBackgroundThread.execute(myParameters);
 
-                ClientBackgroundThread task = new ClientBackgroundThread(ipAddress,port);
-                task.execute();
-             //   Thread clientThread = new Thread(clientBackgroundThread);
-              //  clientThread.start();
 
             }
         });
